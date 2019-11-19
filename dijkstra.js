@@ -6,13 +6,11 @@ let end = [unit - 1, unit - 1];
 let blue = [0, 0, 255];
 let green = [0, 255, 0];
 let yellow = [255, 255, 0];
-let red = [255, 0, 0];
+let livingcoral = [255, 111, 97];
 let black = [0, 0, 0];
 let white = [255, 255, 255];
-var grid = new Array();
+let grid = [];
 var i, j, k;
-let tovisit = [];
-let visited = [];
 let neighbor_candidates = [
   [0, 1],
   [0, -1],
@@ -45,16 +43,17 @@ function Spot(i, j) {
     noStroke();
     // rect(this.i * step, this.j * step, step, step)；
     ellipse(this.i * step + step / 2, this.j * step + step / 2, step, step);
-  }
+  };
   
   this.getNeighbors = function(){
     return this.neighbors;
-  }
+  };
 }
 
 function setup() {
   createCanvas(size, size);
   background(255);
+  frameRate(1);
   // init every grid as a Spot object
   for (var i = 0; i < unit; i++) {
     grid[i] = new Array();
@@ -97,12 +96,12 @@ function setup() {
 }
 
 // render the grid once we make a move
-function renderGrid() {
+function renderGrid(tovisit, visited) {
   for (i = 0; i < tovisit.length; i++) {
-    tovisited[i].show(green);
+    tovisit[i].show(green);
   }
   for (i = 0; i < visited.length; i++) {
-    visited[i].show(red)
+    visited[i].show(livingcoral)
   }
 }
 
@@ -128,27 +127,49 @@ function drawObstacle() {
   
 }
 
-function dijkstra(start, end) {
+// function delaytime(seconds){
+//   var milliseconds = seconds * 1000;
+//   var now = new Date().getTime();
+//   while (true){
+//     var temp = new Date().getTime();
+//     if (temp >= now + milliseconds) break;
+//     console.log("shit");
+//   }
+// } 
+
+function delaytime(seconds){
+  setTimeout(function(){}, seconds * 1000);
+}
+
+function dijkstra(start, end, grid) {
   console.log("dijkstra");
-  tovisit.push(grid[start[0]][start[1]]);
-  while (tovisit.length > 0) {
-    var currSpot = tovisit.splice(0, 1);
-    console.log(currSpot);
+  
+  this.tovisit = [];
+  this.visited = [];
+  this.tovisit.push(grid[start[0]][start[1]]);
+  while (this.tovisit.length > 0) {
+    delaytime(5);
+    createP("rainbow");
+    var currSpot = this.tovisit[0];
+    this.tovisit.splice(0, 1);
+    console.log(Object.keys(currSpot));
+    console.log(currSpot.wall);
     var neighbors = currSpot.getNeighbors();
     console.log(neighbors);
     console.log(currSpot);
     for (i = 0; i < neighbors.length; i++) {
       nextSpot = neighbors[i];
-      if (visited.indexOf(nextSpot) != -1) continue; // don't visit twice
+      if (this.visited.indexOf(nextSpot) != -1) continue; // don't visit twice
       var tempg = currSpot.g + 1;
       if (tempg < nextSpot.g) {
         nextSpot.g = tempg;
         nextSpot.previous = currSpot;
-        tovisit.push(nextSpot);
+        this.tovisit.push(nextSpot);
       }
     }
-    visited.push(currSpot);
-    if (visited.indexOf(grid[end[0]][end[1]]) != -1) {
+    this.visited.push(currSpot);
+    renderGrid(this.tovisit, this.visited);
+    if (this.visited.indexOf(grid[end[0]][end[1]]) != -1) {
       noLoop();
       console.log("done!");
       return; // GOAL!!
@@ -161,6 +182,8 @@ function astar() {
 }
 
 function draw() {
-
-  dijkstra(start, end);
+  // console.log(grid);
+  dijkstra(start, end, grid);
+  // delaytime(1);
+  // createP("rainbow");
 }
