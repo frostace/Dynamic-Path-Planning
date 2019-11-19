@@ -82,7 +82,6 @@ function setup() {
           }
           if (!grid[i + x][j + y].wall) {
             grid[i][j].neighbors.push(grid[i + x][j + y]);
-            console.log(grid[i][j].neighbors.length);
           }
         }
       }
