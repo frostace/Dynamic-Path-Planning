@@ -146,17 +146,17 @@ function dijkstra(start, end, grid) {
   
   this.tovisit = [];
   this.visited = [];
-  this.tovisit.push(grid[start[0]][start[1]]);
+  this.tovisit.splice(this.tovisit.length, 0, grid[start[0]][start[1]]);
   while (this.tovisit.length > 0) {
-    delaytime(5);
+    delaytime(1);
     createP("rainbow");
     var currSpot = this.tovisit[0];
     this.tovisit.splice(0, 1);
-    console.log(Object.keys(currSpot));
-    console.log(currSpot.wall);
+    console.log("visiting: ", currSpot.i, currSpot.j);
     var neighbors = currSpot.getNeighbors();
     console.log(neighbors);
     console.log(currSpot);
+    console.log("before", this.tovisit, this.visited);
     for (i = 0; i < neighbors.length; i++) {
       nextSpot = neighbors[i];
       if (this.visited.indexOf(nextSpot) != -1) continue; // don't visit twice
@@ -164,10 +164,13 @@ function dijkstra(start, end, grid) {
       if (tempg < nextSpot.g) {
         nextSpot.g = tempg;
         nextSpot.previous = currSpot;
-        this.tovisit.push(nextSpot);
+        // this.tovisit.push(nextSpot);
+        this.tovisit.splice(this.tovisit.length, 0, nextSpot);
       }
     }
-    this.visited.push(currSpot);
+    // this.visited.push(currSpot);
+    this.visited.splice(this.visited.length - 1, 0, currSpot);
+    console.log("after", this.tovisit, this.visited);
     renderGrid(this.tovisit, this.visited);
     if (this.visited.indexOf(grid[end[0]][end[1]]) != -1) {
       noLoop();
@@ -178,7 +181,7 @@ function dijkstra(start, end, grid) {
 }
 
 function astar() {
-
+  
 }
 
 function draw() {
