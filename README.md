@@ -1,5 +1,8 @@
 # Path-Planning-Visualization
 
+## BUGs:
+1. showing spots superposition problem
+
 ## TODO:
 1. add diagonal ability
 2. figure out how to delay for some time
