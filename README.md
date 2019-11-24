@@ -22,3 +22,13 @@
 7. resize the demo gifs<br>
 8. Stochastic1 - PRM<br>
 9. Stochastic2 - RRT<br>
+
+## Astar
+1. add heuristic calculation
+2. give same weight to diagonal and vertical and horizontal
+3. implement heap
+4. run dijkstra with a heap, always poping the node with the least cost
+
+## RRT
+1. implement is_state_valid function
+2. implement is_segment_valid function
