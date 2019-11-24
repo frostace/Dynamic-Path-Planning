@@ -4,6 +4,8 @@ let unit = 10;
 let step = Math.floor(size / unit);
 let diam = step / 2;
 let obstacle_diam = step / 3;
+let visited_scale = 0.55;
+let obstacle_density = 0.2;
 
 // default start and end points
 let start = [0, 0]; // in terms of index
@@ -11,11 +13,11 @@ let end = [unit - 1, unit - 1];
 
 // colors
 let blue = [0, 0, 255];
-let green = [0, 255, 0];
-let yellow = [255, 255, 0];
+let green = [107, 165, 57];
+let yellow = [255, 173, 0];
 let livingcoral = [255, 111, 97];
-let grey = [190,198,196];
-let black = [0, 0, 0];
+let grey = [190, 198, 196];
+let black = [81, 83, 74];
 let white = [255, 255, 255];
 
 // init grid
@@ -24,7 +26,11 @@ let neighbor_candidates = [
   [0, 1],
   [0, -1],
   [1, 0],
-  [-1, 0]
+  [-1, 0],
+  [1, 1],
+  [1, -1],
+  [-1, 1],
+  [-1, -1]
 ];
 
 let nextSpot = Spot(0, 0);
@@ -33,6 +39,10 @@ let tovisit = [];
 let visited = [];
 
 function getStartandEnd(){
+  
+}
+
+function manhattan_dist(){
   
 }
 
@@ -47,15 +57,15 @@ function Spot(i, j) {
 
   this.wall = false;
 
-  this.show = function(color, resize = 1) {
-    fill(255);
+  this.show = function(color, scale = 1) {
+    // first cover the original canvas with white
+    fill(white);
     noStroke();
     rect(this.i * step, this.j * step, step, step);
-    
+    // fill with a new color
     fill(color);
     noStroke();
-    
-    ellipse(this.i * step + step / 2, this.j * step + step / 2, diam * resize, diam * resize);
+    ellipse(this.i * step + step / 2, this.j * step + step / 2, diam * scale, diam * scale);
   };
 
   this.getNeighbors = function() {
@@ -83,7 +93,7 @@ function setup() {
   for (var i = 0; i < unit; i++) {
     for (var j = 0; j < unit; j++) {
       if (grid[i][j].wall) {
-        fill(0);
+        fill(black);
         rect(i * step + step / 2 - obstacle_diam / 2, j * step + step / 2 - obstacle_diam / 2, obstacle_diam, obstacle_diam, obstacle_diam / 4);
         ellipse();
       } else {
@@ -118,7 +128,7 @@ function renderGrid(tovisit, visited) {
     tovisit[i].show(livingcoral);
   }
   for (var i = 0; i < visited.length; i++) {
-    visited[i].show(grey, 0.7)
+    visited[i].show(grey, visited_scale);
   }
 }
 
@@ -136,7 +146,7 @@ function drawBestPath(final) {
 function randomObstacle() {
   for (var i = 0; i < unit; i++) {
     for (var j = 0; j < unit; j++) {
-      if (random(1) < 0.1) {
+      if (random(1) < obstacle_density) {
         grid[i][j].wall = true;
       }
       if (i == start[0] && j == start[1]) {
