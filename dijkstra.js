@@ -1,36 +1,38 @@
+// scale param.
 let size = 400;
 let unit = 10;
 let step = Math.floor(size / unit);
+let diam = step / 2;
+
+// default start and end points
 let start = [0, 0]; // in terms of index
 let end = [unit - 1, unit - 1];
+
+// colors
 let blue = [0, 0, 255];
 let green = [0, 255, 0];
 let yellow = [255, 255, 0];
 let livingcoral = [255, 111, 97];
+let grey = [190,198,196];
 let black = [0, 0, 0];
 let white = [255, 255, 255];
+
+// init grid
 let grid = [];
-var i, j, k;
 let neighbor_candidates = [
   [0, 1],
   [0, -1],
   [1, 0],
   [-1, 0]
 ];
-let a = [];
 
-// test
 let nextSpot = Spot(0, 0);
 let tempg = 0;
 let tovisit = [];
 let visited = [];
 
-function removeFromArray(arr, elt) {
-  for (var i = arr.length - 1; i >= 0; i--) {
-    if (arr[i] == elt) {
-      arr.splice(i, 1);
-    }
-  }
+function getStartandEnd(){
+  
 }
 
 function Spot(i, j) {
@@ -48,7 +50,7 @@ function Spot(i, j) {
     fill(color);
     noStroke();
     // rect(this.i * step, this.j * step, step, step)；
-    ellipse(this.i * step + step / 2, this.j * step + step / 2, step, step);
+    ellipse(this.i * step + step / 2, this.j * step + step / 2, diam, diam);
   };
 
   this.getNeighbors = function() {
@@ -59,7 +61,7 @@ function Spot(i, j) {
 function setup() {
   createCanvas(size, size);
   background(255);
-  frameRate(1);
+  // frameRate(1);
   // init every grid as a Spot object
   for (var i = 0; i < unit; i++) {
     grid[i] = new Array();
@@ -73,13 +75,13 @@ function setup() {
   randomObstacle();
   // init neighbors
   // init canvas
-  for (i = 0; i < unit; i++) {
+  for (var i = 0; i < unit; i++) {
     for (var j = 0; j < unit; j++) {
       if (grid[i][j].wall) {
         fill(0);
-        ellipse(i * step + step / 2, j * step + step / 2, step, step);
+        ellipse(i * step + step / 2, j * step + step / 2, diam * 1.5, diam * 1.5);
       } else {
-        for (k = 0; k < neighbor_candidates.length; k++) {
+        for (var k = 0; k < neighbor_candidates.length; k++) {
           var x = neighbor_candidates[k][0];
           var y = neighbor_candidates[k][1];
           if (i + x < 0 || i + x >= unit || j + y < 0 || j + y >= unit) {
@@ -106,19 +108,20 @@ function setup() {
 
 // render the grid once we make a move
 function renderGrid(tovisit, visited) {
-  for (i = 0; i < tovisit.length; i++) {
-    tovisit[i].show(green);
+  for (var i = 0; i < tovisit.length; i++) {
+    tovisit[i].show(livingcoral);
   }
-  for (i = 0; i < visited.length; i++) {
-    visited[i].show(livingcoral)
+  for (var i = 0; i < visited.length; i++) {
+    visited[i].show(grey)
   }
 }
 
+// draw the global best path
 function drawBestPath(final) {
   createP("showing best path!");
   var node = final;
   while (node != undefined) {
-    node.show(blue);
+    node.show(green);
     node = node.previous;
   }
 }
@@ -205,27 +208,11 @@ function dijkstra(start, end, grid) {
   }
 }
 
-function dijkstra(start, end, grid) {
-  console.log("dijkstra");
-
-  //   tovisit.splice(tovisit.length, 0, grid[start[0]][start[1]]);
-
-}
-
-
-// function mouseReleased() {
-//   createP("mouse Released!")
-// }
-
-
-
-
 function astar() {
 
 }
 
-function mouseReleased() {
-  delayForSeconds(1);
+function dijk_delay() {
   let startpoint = grid[start[0]][start[1]];
   let endpoint = grid[end[0]][end[1]];
 
@@ -233,7 +220,8 @@ function mouseReleased() {
   tovisit.splice(0, 1);
   console.log("visiting: ", currSpot.i, currSpot.j);
   var neighbors = currSpot.getNeighbors();
-
+  
+  // === - add unvisited neighbors of curr to tovisit[] - ===
   for (var i = 0; i < neighbors.length; i++) {
     nextSpot = neighbors[i];
     if (visited.indexOf(nextSpot) != -1) continue; // don't visit twice
@@ -242,9 +230,9 @@ function mouseReleased() {
       nextSpot.g = tempg;
       nextSpot.previous = currSpot;
       tovisit.push(nextSpot);
-      // this.tovisit.splice(this.tovisit.length, 0, nextSpot);
     }
   }
+  // === - mark curr as visited - ===
   visited.push(currSpot);
 
   renderGrid(tovisit, visited);
@@ -260,6 +248,7 @@ function mouseReleased() {
 }
 
 function draw() {
+  setTimeout(dijk_delay(), 400);
   // console.log(grid);
   // dijkstra(start, end, grid);
   // noLoop();
