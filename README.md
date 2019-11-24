@@ -1,9 +1,12 @@
 # Path-Planning-Visualization
 
-## DEMO
+## DEMO - DIJKSTRA
 
 ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/dijkstra%20-%20demo.gif)
 
+## DEMO - ASTAR
+
+![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/astar%20-%20demo.gif)
 
 ## BUGs:
 
