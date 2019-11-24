@@ -1,11 +1,12 @@
 // scale param.
 let size = 400;
-let unit = 10;
+let unit = 30;
 let step = Math.floor(size / unit);
 let diam = step / 2;
 let obstacle_diam = step / 3;
 let visited_scale = 0.55;
 let obstacle_density = 0.2;
+let fps = 20;
 
 // default start and end points
 let start = [0, 0]; // in terms of index
@@ -38,20 +39,69 @@ let tempg = 0;
 let tovisit = [];
 let visited = [];
 
+// define heap structure
+class MinHeap {
+
+  constructor() {
+    /* Initialing the array heap and adding a dummy element at index 0 */
+    this.heap = [];
+  }
+
+  popMin(){
+    var temp = this.heap[0];
+    this.remove(0);
+    return temp;
+  }
+  
+  insert(node){
+    this.heap.push(node);
+    var curr = this.heap.length - 1;
+    // console.log(curr, this.heap);
+    while (curr != 0 && this.heap[Math.floor(curr / 2)].f > this.heap[curr].f){
+      [this.heap[Math.floor(curr / 2)], this.heap[curr]] = [this.heap[curr], this.heap[Math.floor(curr / 2)]];
+      curr = Math.floor(curr / 2);
+    }
+  }
+  
+  remove(idx){
+    // swap idx with the last node, heapify the whole tree
+    [this.heap[idx], this.heap[this.heap.length - 1]] = [this.heap[this.heap.length - 1], this.heap[idx]];
+    // remove the last node
+    this.heap.splice(this.heap.length - 1, 1);
+    this.heapify(idx);
+  }
+  
+  heapify(idx){
+    var min_idx = idx;
+    let l = idx * 2;
+    let r = idx * 2 + 1;
+    if (l < this.heap.length && this.heap[l].f < this.heap[min_idx].f){
+      min_idx = l;
+    }
+    if (r < this.heap.length && this.heap[r].f < this.heap[min_idx].f){
+      min_idx = r;
+    }
+    if (min_idx != idx){
+      [this.heap[min_idx], this.heap[idx]] = [this.heap[idx], this.heap[min_idx]];
+      this.heapify(min_idx);
+    }
+  }
+}
+
 function getStartandEnd(){
   
 }
 
-function manhattan_dist(){
-  
+function manhattan_dist(spot1, spot2){
+  return max(abs(spot1.i - spot2.i), abs(spot1.j - spot2.j))
 }
 
 function Spot(i, j) {
   this.i = i;
   this.j = j;
-  this.f = 0;
-  this.g = size;
-  this.h = 0;
+  this.f = 0;     // cost
+  this.g = size;  // distance taken
+  this.h = 0;     // heuristic
   this.previous = undefined;
   this.neighbors = [];
 
@@ -62,7 +112,7 @@ function Spot(i, j) {
     fill(white);
     noStroke();
     rect(this.i * step, this.j * step, step, step);
-    // fill with a new color
+    // then fill with a new color
     fill(color);
     noStroke();
     ellipse(this.i * step + step / 2, this.j * step + step / 2, diam * scale, diam * scale);
@@ -76,7 +126,7 @@ function Spot(i, j) {
 function setup() {
   createCanvas(size, size);
   background(255);
-  frameRate(10);  // fps
+  frameRate(fps);  // fps
   // init every grid as a Spot object
   for (var i = 0; i < unit; i++) {
     grid[i] = new Array();
@@ -93,10 +143,12 @@ function setup() {
   for (var i = 0; i < unit; i++) {
     for (var j = 0; j < unit; j++) {
       if (grid[i][j].wall) {
+        // if wall
         fill(black);
         rect(i * step + step / 2 - obstacle_diam / 2, j * step + step / 2 - obstacle_diam / 2, obstacle_diam, obstacle_diam, obstacle_diam / 4);
         ellipse();
       } else {
+        // if not wall, add neighbor
         for (var k = 0; k < neighbor_candidates.length; k++) {
           var x = neighbor_candidates[k][0];
           var y = neighbor_candidates[k][1];
@@ -105,6 +157,7 @@ function setup() {
           }
           if (!grid[i + x][j + y].wall) {
             grid[i][j].neighbors.push(grid[i + x][j + y]);
+            grid[i][j].h = manhattan_dist(grid[i][j], grid[end[0]][end[1]]);
           }
         }
       }
@@ -164,68 +217,8 @@ function drawObstacle() {
 
 }
 
-// function delaytime(seconds){
-//   var milliseconds = seconds * 1000;
-//   var now = new Date().getTime();
-//   while (true){
-//     var temp = new Date().getTime();
-//     if (temp >= now + milliseconds) break;
-//     console.log("shit");
-//   }
-// } 
-
-// function delayForSeconds(seconds) {
-//   setTimeout(function() {}, seconds * 1000);
-// }
-
-// function dijkstra(start, end, grid) {
-//   console.log("dijkstra");
-//   let startpoint = grid[start[0]][start[1]];
-//   let endpoint = grid[end[0]][end[1]];
-//   let nextSpot = Spot(0, 0);
-//   let tempg = 0;
-//   this.tovisit = [];
-//   this.visited = [];
-//   this.tovisit.splice(this.tovisit.length, 0, startpoint);
-//   while (this.tovisit.length > 0) {
-//     delayForSeconds(1);
-
-//     // createP("before");
-//     // createP(this.tovisit);
-//     // createP(this.visited);
-
-//     var currSpot = this.tovisit[0];
-//     this.tovisit.splice(0, 1);
-//     console.log("visiting: ", currSpot.i, currSpot.j);
-//     var neighbors = currSpot.getNeighbors();
-
-//     for (var i = 0; i < neighbors.length; i++) {
-//       nextSpot = neighbors[i];
-//       if (this.visited.indexOf(nextSpot) != -1) continue; // don't visit twice
-//       tempg = currSpot.g + 1;
-//       if (tempg < nextSpot.g) {
-//         nextSpot.g = tempg;
-//         nextSpot.previous = currSpot;
-//         this.tovisit.push(nextSpot);
-//       }
-//     }
-//     this.visited.push(currSpot);
-
-//     // createP("after");
-//     // createP(this.tovisit);
-//     // createP(this.visited);
-//     renderGrid(this.tovisit, this.visited);
-//     if (this.visited.indexOf(endpoint) != -1) {
-//       noLoop();
-//       drawBestPath(endpoint);
-//       console.log("done!");
-//       return; // GOAL!!
-//     }
-//   }
-// }
-
 function astar() {
-
+  
 }
 
 function dijkstra() {
