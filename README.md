@@ -2,8 +2,7 @@
 
 ## DEMO
 
-![dijkstra - demo](/Users/frostace/Documents/GitHub/Path-Planning-Visualization/dijkstra - demo.gif)
-
+![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/dijkstra%20-%20demo.gif)
 
 
 ## BUGs:
