@@ -1,3 +1,4 @@
+// === Init ===========================================
 // scale param.
 let size = 400;
 let unit = 30;
@@ -36,9 +37,87 @@ let neighbor_candidates = [
 
 let nextSpot = Spot(0, 0);
 let tempg = 0;
+let tempf = 0;
 let tovisit = [];
 let visited = [];
+// ==================================================
 
+// === Basic Canvas Functions =======================
+function Spot(i, j) {
+  this.i = i;
+  this.j = j;
+  this.f = 0;     // cost
+  this.g = size;  // distance taken
+  this.h = 0;     // heuristic
+  this.previous = undefined;
+  this.neighbors = [];
+
+  this.wall = false;
+
+  this.show = function(color, scale = 1) {
+    // first cover the original canvas with white
+    fill(white);
+    noStroke();
+    rect(this.i * step, this.j * step, step, step);
+    // then fill with a new color
+    fill(color);
+    noStroke();
+    ellipse(this.i * step + step / 2, this.j * step + step / 2, diam * scale, diam * scale);
+  };
+
+  this.getNeighbors = function() {
+    return this.neighbors;
+  };
+}
+
+function getStartandEnd(){
+  
+}
+
+// generate random obstacle in grid
+function randomObstacle() {
+  for (var i = 0; i < unit; i++) {
+    for (var j = 0; j < unit; j++) {
+      if (random(1) < obstacle_density) {
+        grid[i][j].wall = true;
+      }
+      if (i == start[0] && j == start[1]) {
+        grid[i][j].wall = false;
+      }
+      if (i == end[0] && j == end[1]) {
+        grid[i][j].wall = false;
+      }
+    }
+  }
+}
+
+// generate obstacle with mouse
+function drawObstacle() {
+
+}
+
+// render the grid once we make a move
+function renderGrid(tovisit, visited) {
+  for (var i = 0; i < tovisit.length; i++) {
+    tovisit[i].show(livingcoral);
+  }
+  for (var i = 0; i < visited.length; i++) {
+    visited[i].show(grey, visited_scale);
+  }
+}
+
+// draw the global best path
+function drawBestPath(final) {
+  createP("showing best path!");
+  var node = final;
+  while (node != undefined) {
+    node.show(green);
+    node = node.previous;
+  }
+}
+// ==================================================
+
+// ==================================================
 // define heap structure
 class MinHeap {
 
@@ -87,40 +166,14 @@ class MinHeap {
     }
   }
 }
+// ==================================================
 
-function getStartandEnd(){
-  
-}
+// init global heap object
+let H = new MinHeap();
 
+// use manhattan distance projection to calculate heuristic
 function manhattan_dist(spot1, spot2){
   return max(abs(spot1.i - spot2.i), abs(spot1.j - spot2.j))
-}
-
-function Spot(i, j) {
-  this.i = i;
-  this.j = j;
-  this.f = 0;     // cost
-  this.g = size;  // distance taken
-  this.h = 0;     // heuristic
-  this.previous = undefined;
-  this.neighbors = [];
-
-  this.wall = false;
-
-  this.show = function(color, scale = 1) {
-    // first cover the original canvas with white
-    fill(white);
-    noStroke();
-    rect(this.i * step, this.j * step, step, step);
-    // then fill with a new color
-    fill(color);
-    noStroke();
-    ellipse(this.i * step + step / 2, this.j * step + step / 2, diam * scale, diam * scale);
-  };
-
-  this.getNeighbors = function() {
-    return this.neighbors;
-  };
 }
 
 function setup() {
@@ -138,8 +191,7 @@ function setup() {
   }
   // generate obstacle
   randomObstacle();
-  // init neighbors
-  // init canvas
+  // init canvas, neighbors, heuristic
   for (var i = 0; i < unit; i++) {
     for (var j = 0; j < unit; j++) {
       if (grid[i][j].wall) {
@@ -171,54 +223,9 @@ function setup() {
     }
   }
 
-  // test
+  // init tovisit
   tovisit.push(grid[start[0]][start[1]]);
-}
-
-// render the grid once we make a move
-function renderGrid(tovisit, visited) {
-  for (var i = 0; i < tovisit.length; i++) {
-    tovisit[i].show(livingcoral);
-  }
-  for (var i = 0; i < visited.length; i++) {
-    visited[i].show(grey, visited_scale);
-  }
-}
-
-// draw the global best path
-function drawBestPath(final) {
-  createP("showing best path!");
-  var node = final;
-  while (node != undefined) {
-    node.show(green);
-    node = node.previous;
-  }
-}
-
-// generate random obstacle in grid
-function randomObstacle() {
-  for (var i = 0; i < unit; i++) {
-    for (var j = 0; j < unit; j++) {
-      if (random(1) < obstacle_density) {
-        grid[i][j].wall = true;
-      }
-      if (i == start[0] && j == start[1]) {
-        grid[i][j].wall = false;
-      }
-      if (i == end[0] && j == end[1]) {
-        grid[i][j].wall = false;
-      }
-    }
-  }
-}
-
-// generate obstacle with mouse
-function drawObstacle() {
-
-}
-
-function astar() {
-  
+  H.insert(grid[start[0]][start[1]]);
 }
 
 function dijkstra() {
@@ -256,6 +263,39 @@ function dijkstra() {
   }
 }
 
+function astar() {
+  let startpoint = grid[start[0]][start[1]];
+  let endpoint = grid[end[0]][end[1]];
+  
+  var currSpot = H.popMin();
+  var neighbors = currSpot.getNeighbors();
+  
+  // === - add unvisited neighbors of curr to tovisit[] - ===
+  for (var i = 0; i < neighbors.length; i++) {
+    nextSpot = neighbors[i];
+    if (visited.indexOf(nextSpot) != -1) continue; // don't visit twice
+    tempf = currSpot.g + 1 + nextSpot.h;
+    if (tempg < nextSpot.g) {
+      nextSpot.f = tempf;
+      nextSpot.previous = currSpot;
+      H.insert(nextSpot);
+    }
+  }
+  // === - mark curr as visited - ===
+  visited.push(currSpot);
+
+  renderGrid(H.heap, visited);
+  if (visited.indexOf(endpoint) != -1) {
+    noLoop();
+    drawBestPath(endpoint);
+    console.log("done!");
+    return; // GOAL!!
+  }
+  if (H.heap.length == 0) {
+    createP("no solution")
+  }
+}
+
 function draw() {
-  dijkstra();
+  astar();
 }
