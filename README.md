@@ -1,6 +1,13 @@
 # Path-Planning-Visualization
 
+## DEMO
+
+![dijkstra - demo](/Users/frostace/Documents/GitHub/Path-Planning-Visualization/dijkstra - demo.gif)
+
+
+
 ## BUGs:
+
 ~~1. showing spots superposition problem~~
 
 ## TODO:
