@@ -29,6 +29,14 @@
 3. implement heap
 4. run dijkstra with a heap, always poping the node with the least cost
 
+## Visibility Graphs
+
+## Voronoi Graphs
+
+## Potential Fields
+
+## PRM
+
 ## RRT
 1. implement is_state_valid function
 2. implement is_segment_valid function
