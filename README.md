@@ -10,7 +10,10 @@
 
 ## BUGs:
 
-~~1. showing spots superposition problem~~
+~~1. showing spots superposition problem<br>~~
+2. pass undefined variable to functions issue:
+  e.g. 239 passing an undefined variable to isSegmentValid function
+  
 
 ## TODO:
 ~~1. add diagonal ability~~<br>
@@ -38,5 +41,7 @@
 ## PRM
 
 ## RRT
-1. implement is_state_valid function
-2. implement is_segment_valid function
+~~1. implement is_state_valid function<br>~~
+~~2. implement is_segment_valid function<br>~~
+~~3. nearest_vertex<br>~~
+~~4. extend<br>~~
