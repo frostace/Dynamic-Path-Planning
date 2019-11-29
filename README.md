@@ -9,13 +9,12 @@
 ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/astar%20-%20demo.gif)
 
 ## BUGs:
-
 1. ~~showing spots superposition problem<br>~~
 2. ~~pass undefined variable to functions issue:~~
     * e.g. 239 passing an undefined variable to isSegmentValid function
     * 293 visiting an undefined entry of grid
         * b.c. i set the grow length to be 2, which may lead to the issue of growing the tree outside of the board, and visiting the undefined grid.
-     
+3. ~~when generating random spots, i should not instantize a new spot, i have to randomly pick a pair of indices and take the spot out of the grid matrix. otherwise i cannot get the spot.wall attribute correctly, cause they are all new objects.
 
 ## TODO:
 1. ~~add diagonal ability~~
