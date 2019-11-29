@@ -11,9 +11,11 @@
 ## BUGs:
 
 1. ~~showing spots superposition problem<br>~~
-2. pass undefined variable to functions issue:
-  e.g. 239 passing an undefined variable to isSegmentValid function
-  
+2. ~~pass undefined variable to functions issue:~~
+    * e.g. 239 passing an undefined variable to isSegmentValid function
+    * 293 visiting an undefined entry of grid
+        * b.c. i set the grow length to be 2, which may lead to the issue of growing the tree outside of the board, and visiting the undefined grid.
+     
 
 ## TODO:
 1. ~~add diagonal ability~~
