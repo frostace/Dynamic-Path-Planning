@@ -28,7 +28,7 @@
 4. ~~I need to implement heap first to implement A*~~
 5. ~~implement A* function, compare~~
 6. ~~UI adjustment: rounded rectangle -> obstacle~~
-7. resize the demo gifs
+7. ~~resize the demo gifs~~
 8. Stochastic1 - PRM
 9. Stochastic2 - RRT
 
