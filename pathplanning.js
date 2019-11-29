@@ -1,12 +1,12 @@
 // === Init ===========================================
 // scale param.
 let size = 400;
-let unit = 10;
+let unit = 30;
 let step = Math.floor(size / unit);
 let diam = step / 2;
 let obstacle_diam = step / 3;
 let visited_scale = 0.55;
-let obstacle_density = 0.4;
+let obstacle_density = 0.2;
 let obstacle_pixel_map = []; // i gave weight pixel-wise to the whole canvas, where there is an obstacle, its pixel weight should be infinity
 let fps = 20;
 let grow_len = 1;
@@ -193,6 +193,8 @@ class RRTBranch {
     show(color) {
       stroke(color);
       strokeWeight(4);
+      console.log(this.parent.spot, this.spot);
+      console.log(this.parent.spot.i * step + step / 2, this.parent.spot.j * step + step / 2);
       line(this.parent.spot.i * step + step / 2, this.parent.spot.j * step + step / 2, this.spot.i * step + step / 2, this.spot.j * step + step / 2);
     }
 }
@@ -245,10 +247,10 @@ function isSegmentValid(spot1, spot2) {
     // here i1, j1, i2, j2 are node idx
     // convert them to pixel idx before checking state validity
     [i1, j1, i2, j2] = [spot1.i, spot1.j, spot2.i, spot2.j];
-    pixel_i1 = i1 * step;
-    pixel_j1 = j1 * step;
-    pixel_i2 = i2 * step;
-    pixel_j2 = j2 * step;
+    pixel_i1 = i1 * step + step / 2;
+    pixel_j1 = j1 * step + step / 2;
+    pixel_i2 = i2 * step + step / 2;
+    pixel_j2 = j2 * step + step / 2;
     for (var i = pixel_i1; i < pixel_i2; i += Math.floor(step / 2)) {
         // calculate the interpolation of pixel j accordingly
         var j = (pixel_j2 - pixel_j1) * (i - pixel_i1) / (pixel_i2 - pixel_i1) + pixel_j1;
@@ -292,8 +294,9 @@ function extend(parent_branch, son_spot) {
     [vec_i, vec_j] = [(son_spot.i - parent_spot.i) * step, (son_spot.j - parent_spot.j) * step];
     // Normalize the vector parent -> son and multiply by self.grow_len
     let normalen = norm1(vec_i, vec_j);
-    [try_i, try_j] = [parent_spot.i * step + vec_i / normalen * grow_len * step, parent_spot.j * step + vec_j / normalen * grow_len * step];
+    [try_i, try_j] = [parent_spot.i * step + step / 2 + vec_i / normalen * grow_len * step, parent_spot.j * step + step / 2 + vec_j / normalen * grow_len * step];
     // find belonging lord of try_i and try_j
+    console.log("try: ", try_i, try_j);
     i_lord = Math.floor(try_i / step);
     j_lord = Math.floor(try_j / step);
     console.log(i_lord, j_lord);
@@ -459,20 +462,16 @@ function RRT() {
         noLoop();
     }
     let spot_rand = genRandomSpot();
-    if (spot_rand.wall){
-      return;
-    }
+    if (spot_rand.wall) {return;}
     spot_rand.show(blue);
     counter++;
-    console.log(counter);
-    console.log("upper");
+    // console.log(counter);
+    // console.log("upper");
     let b_nearest = nearestVertex(spot_rand);
     // console.log(b_nearest);
-    console.log("lower");
+    // console.log("lower");
     let spot_new = extend(b_nearest, spot_rand);
-    if (spot_new === undefined) {
-        return;
-    }
+    if (spot_new === undefined || spot_new !== undefined && spot_new.wall) {return;}
     b_new = new RRTBranch(b_nearest, spot_new);
     drawLine(b_nearest.spot, spot_new);
     RRT_tree.push(b_new);
@@ -480,6 +479,7 @@ function RRT() {
     if (isSegmentValid(RRT_tree[RRT_tree.length - 1].spot, endSpot)) {
       let lastBranch = new RRTBranch(RRT_tree[RRT_tree.length - 1], endSpot);
       RRT_tree.push(lastBranch);
+      lastBranch.show(blue);
       console.log("done");
       createP("RRT tree built!");
       noLoop();
@@ -488,4 +488,5 @@ function RRT() {
 
 function draw() {
     RRT();
+    // noLoop();
 }
