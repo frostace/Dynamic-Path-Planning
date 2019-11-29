@@ -1,8 +1,10 @@
 # Path-Planning-Visualization
 
 ## DEMO - DIJKSTRA, Astar
+Solarized dark             |  Solarized Ocean
+:-------------------------:|:-------------------------:
+![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/dijkstra%20-%20demo.gif)  |  ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/astar%20-%20demo.gif)
 
-![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/dijkstra%20-%20demo.gif) ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/astar%20-%20demo.gif)
 
 ## DEMO - RRT
 ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/rrt%20-%20demo.gif)
