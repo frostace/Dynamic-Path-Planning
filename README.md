@@ -8,6 +8,9 @@
 
 ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/astar%20-%20demo.gif)
 
+## DEMO - RRT
+![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/rrt%20-%20demo.gif)
+
 ## BUGs:
 1. ~~showing spots superposition problem<br>~~
 2. ~~pass undefined variable to functions issue:~~
