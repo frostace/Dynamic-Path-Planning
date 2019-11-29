@@ -192,9 +192,7 @@ class RRTBranch {
 
     show(color) {
       stroke(color);
-      strokeWeight(4);
-      console.log(this.parent.spot, this.spot);
-      console.log(this.parent.spot.i * step + step / 2, this.parent.spot.j * step + step / 2);
+      strokeWeight(2);
       line(this.parent.spot.i * step + step / 2, this.parent.spot.j * step + step / 2, this.spot.i * step + step / 2, this.spot.j * step + step / 2);
     }
 }
@@ -296,10 +294,8 @@ function extend(parent_branch, son_spot) {
     let normalen = norm1(vec_i, vec_j);
     [try_i, try_j] = [parent_spot.i * step + step / 2 + vec_i / normalen * grow_len * step, parent_spot.j * step + step / 2 + vec_j / normalen * grow_len * step];
     // find belonging lord of try_i and try_j
-    console.log("try: ", try_i, try_j);
     i_lord = Math.floor(try_i / step);
     j_lord = Math.floor(try_j / step);
-    console.log(i_lord, j_lord);
     if (i_lord < 0 || i_lord >= unit || j_lord < 0 || j_lord >= unit) {
         return undefined;
     }
@@ -384,7 +380,7 @@ function dijkstra() {
 
     var currSpot = tovisit[0];
     tovisit.splice(0, 1);
-    console.log("visiting: ", currSpot.i, currSpot.j);
+    // console.log("visiting: ", currSpot.i, currSpot.j);
     var neighbors = currSpot.getNeighbors();
 
     // === - add unvisited neighbors of curr to tovisit[] - ===
@@ -462,14 +458,10 @@ function RRT() {
         noLoop();
     }
     let spot_rand = genRandomSpot();
-    if (spot_rand.wall) {return;}
-    spot_rand.show(blue);
+    if (spot_rand.wall || visited.indexOf(nextSpot) !== -1) {return;}
+    visited.push(spot_rand)
     counter++;
-    // console.log(counter);
-    // console.log("upper");
     let b_nearest = nearestVertex(spot_rand);
-    // console.log(b_nearest);
-    // console.log("lower");
     let spot_new = extend(b_nearest, spot_rand);
     if (spot_new === undefined || spot_new !== undefined && spot_new.wall) {return;}
     b_new = new RRTBranch(b_nearest, spot_new);
