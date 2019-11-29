@@ -10,13 +10,14 @@ let obstacle_density = 0.2;
 let obstacle_pixel_map = []; // i gave weight pixel-wise to the whole canvas, where there is an obstacle, its pixel weight should be infinity
 let fps = 20;
 let grow_len = 1;
+let scope = (unit / 10) * (unit / 10);
 
 // default start and end points
 let start = [0, 0]; // in terms of index
 let end = [unit - 1, unit - 1];
 
 // colors
-let blue = [0, 0, 255];
+let blue = [125, 156, 192];
 let green = [107, 165, 57];
 let yellow = [255, 173, 0];
 let livingcoral = [255, 111, 97];
@@ -90,6 +91,9 @@ function randomObstacle() {
                 grid[i][j].wall = false;
             }
             if (i === end[0] && j === end[1]) {
+                grid[i][j].wall = false;
+            }
+            if (Math.sqrt((i - end[0]) * (i - end[0]) + (j - end[1]) * (j - end[1])) < scope) {
                 grid[i][j].wall = false;
             }
         }
@@ -263,6 +267,9 @@ function isSegmentValid(spot1, spot2) {
     return true;
 }
 
+function isWithinScope(spot1, spot2) {
+    return (Math.sqrt((spot1.i - spot2.i) * (spot1.i - spot2.i) + (spot1.j - spot2.j) * (spot1.j - spot2.j)) < scope);
+}
 function genRandomSpot() {
     let tempSpot = grid[Math.floor(random(1) * unit)][Math.floor(random(1) * unit)];
     // tempSpot.h = manhattan_dist(tempSpot, grid[end[0]][end[1]]);
@@ -305,9 +312,6 @@ function extend(parent_branch, son_spot) {
     return undefined;
 }
 
-function drawLine(spot1, spot2){
-    line(spot1.i * step + step / 2, spot1.j * step + step / 2, spot2.i * step + step / 2, spot2.j * step + step / 2);
-}
 // ==================================================
 // ==================================================
 
@@ -463,15 +467,17 @@ function RRT() {
     counter++;
     let b_nearest = nearestVertex(spot_rand);
     let spot_new = extend(b_nearest, spot_rand);
-    if (spot_new === undefined || spot_new !== undefined && spot_new.wall) {return;}
+    if (spot_new === undefined || spot_new !== undefined && spot_new.wall || visited.indexOf(spot_new) !== -1) {return;}
     b_new = new RRTBranch(b_nearest, spot_new);
-    drawLine(b_nearest.spot, spot_new);
+    // drawLine(b_nearest.spot, spot_new);
     RRT_tree.push(b_new);
-    b_new.show(blue);
-    if (isSegmentValid(RRT_tree[RRT_tree.length - 1].spot, endSpot)) {
+    b_new.show(livingcoral);
+    // if (isSegmentValid(RRT_tree[RRT_tree.length - 1].spot, endSpot))
+    if (isWithinScope(RRT_tree[RRT_tree.length - 1].spot, endSpot))
+    {
       let lastBranch = new RRTBranch(RRT_tree[RRT_tree.length - 1], endSpot);
       RRT_tree.push(lastBranch);
-      lastBranch.show(blue);
+      lastBranch.show(livingcoral);
       console.log("done");
       createP("RRT tree built!");
       noLoop();
