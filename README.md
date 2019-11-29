@@ -3,7 +3,7 @@
 Dijkstra                   |  Astar
 :-------------------------:|:-------------------------:
 ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/dijkstra%20-%20demo.gif)  |  ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/astar%20-%20demo.gif)
-RRT                        |  PRM
+RRT                        |  BIRRT
 ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/rrt%20-%20demo.gif)  |  
 Potential Fields           |  PRM
 
