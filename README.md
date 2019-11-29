@@ -1,12 +1,8 @@
 # Path-Planning-Visualization
 
-## DEMO - DIJKSTRA
+## DEMO - DIJKSTRA, Astar
 
-![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/dijkstra%20-%20demo.gif)
-
-## DEMO - ASTAR
-
-![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/astar%20-%20demo.gif)
+![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/dijkstra%20-%20demo.gif) ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/astar%20-%20demo.gif)
 
 ## DEMO - RRT
 ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/rrt%20-%20demo.gif)
