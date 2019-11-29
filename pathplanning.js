@@ -1,15 +1,15 @@
 // === Init ===========================================
 // scale param.
 let size = 400;
-let unit = 30;
+let unit = 10;
 let step = Math.floor(size / unit);
 let diam = step / 2;
 let obstacle_diam = step / 3;
 let visited_scale = 0.55;
-let obstacle_density = 0.2;
+let obstacle_density = 0.4;
 let obstacle_pixel_map = []; // i gave weight pixel-wise to the whole canvas, where there is an obstacle, its pixel weight should be infinity
 let fps = 20;
-let grow_len = 2;
+let grow_len = 1;
 
 // default start and end points
 let start = [0, 0]; // in terms of index
@@ -43,6 +43,7 @@ let tempg = 0;
 let tempf = 0;
 let tovisit = [];
 let visited = [];
+let counter = 0; // RRT counter
 // ==================================================
 
 // === Basic Canvas Functions =======================
@@ -181,11 +182,18 @@ function manhattan_dist(spot1, spot2) {
     return max(abs(spot1.i - spot2.i), abs(spot1.j - spot2.j))
 }
 
-// === functions for RRT =============================
+// ==================================================
+// === functions for RRT ============================
 class RRTBranch {
     constructor(parent, spot) {
         this.parent = parent;
         this.spot = spot;
+    }
+
+    show(color) {
+      stroke(color);
+      strokeWeight(4);
+      line(this.parent.spot.i * step + step / 2, this.parent.spot.j * step + step / 2, this.spot.i * step + step / 2, this.spot.j * step + step / 2);
     }
 }
 
@@ -256,8 +264,8 @@ function isSegmentValid(spot1, spot2) {
 }
 
 function genRandomSpot() {
-    let tempSpot = new Spot(Math.floor(random(1) * unit), Math.floor(random(1) * unit));
-    tempSpot.h = manhattan_dist(tempSpot, grid[end[0]][end[1]]);
+    let tempSpot = grid[Math.floor(random(1) * unit)][Math.floor(random(1) * unit)];
+    // tempSpot.h = manhattan_dist(tempSpot, grid[end[0]][end[1]]);
     return tempSpot;
 }
 
@@ -288,7 +296,10 @@ function extend(parent_branch, son_spot) {
     // find belonging lord of try_i and try_j
     i_lord = Math.floor(try_i / step);
     j_lord = Math.floor(try_j / step);
-    console.log(parent_spot);
+    console.log(i_lord, j_lord);
+    if (i_lord < 0 || i_lord >= unit || j_lord < 0 || j_lord >= unit) {
+        return undefined;
+    }
     if (isSegmentValid(parent_spot, grid[i_lord][j_lord])) {
         return grid[i_lord][j_lord];
     }
@@ -298,7 +309,7 @@ function extend(parent_branch, son_spot) {
 function drawLine(spot1, spot2){
     line(spot1.i * step + step / 2, spot1.j * step + step / 2, spot2.i * step + step / 2, spot2.j * step + step / 2);
 }
-
+// ==================================================
 // ==================================================
 
 function setup() {
@@ -349,9 +360,17 @@ function setup() {
         }
     }
 
-    // init tovisit
+    // init dijkstra
     tovisit.push(grid[start[0]][start[1]]);
+    // init Astar
     H.insert(grid[start[0]][start[1]]);
+    // init RRT
+    let randspot = genRandomSpot();
+    let startSpot = grid[start[0]][start[1]];
+    let nil = new RRTBranch(undefined, randspot);
+    let initBranch = new RRTBranch(nil, startSpot);
+
+    RRT_tree.push(initBranch);
 }
 
 // ====================================================
@@ -429,38 +448,42 @@ function astar() {
 // ====================================================
 // RRT
 function RRT() {
-    let startSpot = grid[start[0]][start[1]];
+
     let endSpot = grid[end[0]][end[1]];
-    let startTime = second();
-    let randspot = genRandomSpot();
-    this.nil = new RRTBranch(undefined, randspot);
-    let initBranch = new RRTBranch(this.nil, startSpot);
-    RRT_tree.push(initBranch);
-    while (1) {
-        let nowTime = second();
-        if (nowTime - startTime > 30) {
-            console.log("RRT Timeout!");
-            createP("RRT Timeout!");
-            break;
-        }
-        let spot_rand = genRandomSpot();
+    // let startTime = second();
 
-        let b_nearest = nearestVertex(spot_rand);
-        console.log(b_nearest);
-        let spot_new = extend(b_nearest, spot_rand);
-        if (spot_new === undefined) {
-            continue;
-        }
-        b_new = new RRTBranch(b_nearest, spot_new);
-        drawLine(b_nearest.spot, spot_new);
-        RRT_tree.push(b_new);
-
-        if (isSegmentValid(RRT_tree[RRT_tree.length - 1].spot, endSpot)) break;
+    // let nowTime = second();
+    if (counter > unit * unit * (1 - obstacle_density)) {
+        console.log("RRT Timeout!");
+        createP("RRT Timeout!");
+        noLoop();
     }
-    let lastBranch = new RRTBranch(RRT_tree[RRT_tree.length - 1], endSpot);
-    RRT_tree.push(lastBranch);
-    console.log("done");
-    createP("RRT tree built!");
+    let spot_rand = genRandomSpot();
+    if (spot_rand.wall){
+      return;
+    }
+    spot_rand.show(blue);
+    counter++;
+    console.log(counter);
+    console.log("upper");
+    let b_nearest = nearestVertex(spot_rand);
+    // console.log(b_nearest);
+    console.log("lower");
+    let spot_new = extend(b_nearest, spot_rand);
+    if (spot_new === undefined) {
+        return;
+    }
+    b_new = new RRTBranch(b_nearest, spot_new);
+    drawLine(b_nearest.spot, spot_new);
+    RRT_tree.push(b_new);
+    b_new.show(blue);
+    if (isSegmentValid(RRT_tree[RRT_tree.length - 1].spot, endSpot)) {
+      let lastBranch = new RRTBranch(RRT_tree[RRT_tree.length - 1], endSpot);
+      RRT_tree.push(lastBranch);
+      console.log("done");
+      createP("RRT tree built!");
+      noLoop();
+    }
 }
 
 function draw() {
