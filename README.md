@@ -6,7 +6,7 @@ Dijkstra                   |  Astar
 RRT                        |  BIRRT
 ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/rrt%20-%20demo.gif)  |  
 Potential Fields           |  PRM
-
+![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/potential%20field%20-%20demo.gif)
 
 ## BUGs:
 1. ~~showing spots superposition problem<br>~~
