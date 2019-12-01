@@ -6,7 +6,7 @@ let step = Math.floor(size / unit);
 let diam = step / 2;
 let obstacle_diam = step / 3;
 let visited_scale = 0.55;
-let obstacle_density = 0.2;
+let obstacle_density = 0.4;
 let obstacle_pixel_map = []; // i gave weight pixel-wise to the whole canvas, where there is an obstacle, its pixel weight should be infinity
 let fps = 20;
 let grow_len = 1;
@@ -40,6 +40,7 @@ let neighbor_candidates = [
 ];
 
 let nextSpot = Spot(0, 0);
+let potentialCurrSpot;
 let tempg = 0;
 let tempf = 0;
 let tovisit = [];
@@ -57,6 +58,8 @@ function Spot(i, j) {
     this.previous = undefined;
     this.neighbors = [];
     this.wallneighbors = [];
+    this.weight = 1;  // this attribute is for potential field, it describes the repell force weight given by this obstacle
+                      // it's not used if it's a free spot.
 
     this.wall = false;
 
@@ -270,6 +273,7 @@ function isSegmentValid(spot1, spot2) {
 function isWithinScope(spot1, spot2) {
     return (Math.sqrt((spot1.i - spot2.i) * (spot1.i - spot2.i) + (spot1.j - spot2.j) * (spot1.j - spot2.j)) < scope);
 }
+
 function genRandomSpot() {
     let tempSpot = grid[Math.floor(random(1) * unit)][Math.floor(random(1) * unit)];
     // tempSpot.h = manhattan_dist(tempSpot, grid[end[0]][end[1]]);
@@ -313,6 +317,71 @@ function extend(parent_branch, son_spot) {
 }
 
 // ==================================================
+// ==== function for potential field ================
+class QuadTree {
+    constructor() {
+
+    }
+}
+// attracted by the goal
+// energy is a scalar or a vector????
+function attractEnergy (currSpot, goalSpot) {
+    let attEnergy = createVector(goalSpot.i - currSpot.i, goalSpot.j - currSpot.j);
+    let d = attEnergy.mag();
+    attEnergy.setMag(d * d);
+    return attEnergy;
+}
+
+// repelled by the obstacles
+// we should store nearby obstacles in a quadtree
+function repellEnergy (currSpot, obstacles) {
+    let repEnergy = createVector(0, 0);
+    if (obstacles.length === 0) {
+       return createVector(0, 0);
+    }
+    for (let obstacle in obstacles) {
+        let tempEnergy = createVector(currSpot.i - obstacle.i, currSpot.j - obstacle.j);
+        let d = tempEnergy.mag();
+        tempEnergy.setMag(obstacle.weight / d / d);
+        repEnergy.add(tempEnergy);
+    }
+    return repEnergy;
+}
+
+function potentialEnergy (currSpot, goalSpot) {
+    let obstacles = findNearbyObstacles(currSpot);
+    let energy = p5.Vector.add(attractEnergy(currSpot, goalSpot), repellEnergy(currSpot, obstacles));
+    return energy;
+}
+
+// find nearby obstacles of the current spot with QuadTree
+function findNearbyObstacles (currSpot) {
+    let obstacles = [];
+
+
+    return obstacles;
+}
+
+// find the nextSpot along the negative gradient
+function findNextSpot (currSpot, goalSpot) {
+    let winner;
+    let minEnergy = Infinity;
+    for (let [di, dj] of neighbor_candidates) {
+
+        let newi = currSpot.i + di;
+        let newj = currSpot.j + dj;
+        if (newi < 0 || newi >= unit || newj < 0 || newj >= unit) {continue;}
+        let neighbor = grid[newi][newj];
+        if (neighbor === undefined || neighbor.wall) {continue;}
+        let tempEnergy = potentialEnergy(neighbor, goalSpot).mag();
+        if (tempEnergy < minEnergy) {
+            minEnergy = tempEnergy;
+            winner = neighbor;
+        }
+    }
+    return winner;
+}
+
 // ==================================================
 
 function setup() {
@@ -374,6 +443,9 @@ function setup() {
     let initBranch = new RRTBranch(nil, startSpot);
 
     RRT_tree.push(initBranch);
+
+    // init potential field
+    potentialCurrSpot = grid[start[0]][start[1]];
 }
 
 // ====================================================
@@ -475,16 +547,30 @@ function RRT() {
     // if (isSegmentValid(RRT_tree[RRT_tree.length - 1].spot, endSpot))
     if (isWithinScope(RRT_tree[RRT_tree.length - 1].spot, endSpot))
     {
-      let lastBranch = new RRTBranch(RRT_tree[RRT_tree.length - 1], endSpot);
-      RRT_tree.push(lastBranch);
-      lastBranch.show(livingcoral);
-      console.log("done");
-      createP("RRT tree built!");
-      noLoop();
+        let lastBranch = new RRTBranch(RRT_tree[RRT_tree.length - 1], endSpot);
+        RRT_tree.push(lastBranch);
+        lastBranch.show(livingcoral);
+        console.log("done");
+        createP("RRT tree built!");
+        noLoop();
+    }
+}
+
+// Potential Field
+function potentialField() {
+    let endSpot = grid[end[0]][end[1]];
+    if (potentialCurrSpot != endSpot) {
+        potentialCurrSpot = findNextSpot(potentialCurrSpot, endSpot);
+        potentialCurrSpot.show(livingcoral);
+
+    }
+    else {
+        console.log("done");
+        noLoop();
     }
 }
 
 function draw() {
-    RRT();
+    potentialField();
     // noLoop();
 }
