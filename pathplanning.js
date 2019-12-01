@@ -96,9 +96,9 @@ function randomObstacle() {
             if (i === end[0] && j === end[1]) {
                 grid[i][j].wall = false;
             }
-            if (Math.sqrt((i - end[0]) * (i - end[0]) + (j - end[1]) * (j - end[1])) < scope) {
-                grid[i][j].wall = false;
-            }
+            // if (Math.sqrt((i - end[0]) * (i - end[0]) + (j - end[1]) * (j - end[1])) < scope) {
+            //     grid[i][j].wall = false;
+            // }
         }
     }
 }
