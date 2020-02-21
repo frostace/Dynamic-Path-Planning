@@ -1,5 +1,8 @@
 # Path-Planning-Visualization
 
+I am gonna migrate this project to a dynamic path planning game in which the obstacles are dynamic and can be interactively added with mouse or touchpad, the destination is also moving as well.
+
+
 Dijkstra                   |  Astar
 :-------------------------:|:-------------------------:
 ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/dijkstra%20-%20demo.gif)  |  ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/astar%20-%20demo.gif)
