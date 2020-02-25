@@ -34,7 +34,8 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^2.2.0"
+    "gh-pages": "^2.2.0",
+    "react-addons-update": "^15.6.2"
   },
   "homepage": "http://frostace.github.io/Dynamic-Path-Planning"
 }

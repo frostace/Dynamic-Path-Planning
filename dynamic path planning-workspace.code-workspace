@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "/Users/frostace/Desktop/Pathfinding-Visualizer-Tutorial-master"
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": true,
+		"prettier.useTabs": true
+	}
+}

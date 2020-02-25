@@ -1,6 +1,7 @@
 .square {
-    height:2vh;
-    width:2vh;
-    border: none;
-    margin: 0.5px;
+	height: 2vw;
+	width: 2vw;
+	/* border-width: 0.2px; */
+	border-color: #59cbe8;
+	/* margin: 0.5px; */
 }
