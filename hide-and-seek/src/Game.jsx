@@ -32,7 +32,6 @@ class Game extends React.Component {
 
 	handleMouseFlip(i) {
 		if (!this.state.mouseIsDown) return;
-		console.log("working!");
 		const tmpSquares = this.state.boardSquareColors.slice();
 
 		tmpSquares[i] =
@@ -40,7 +39,6 @@ class Game extends React.Component {
 				? flippedColor
 				: originColor;
 
-		console.log(tmpSquares[i]);
 		this.setState({
 			boardSquareColors: tmpSquares,
 			// boardSquareColors: update(this.state.boardSquareColors, {
