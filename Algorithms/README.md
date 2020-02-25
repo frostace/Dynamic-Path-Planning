@@ -5,11 +5,11 @@ I am gonna migrate this project to a dynamic path planning game in which the obs
 
 Dijkstra                   |  Astar
 :-------------------------:|:-------------------------:
-![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/dijkstra%20-%20demo.gif)  |  ![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/astar%20-%20demo.gif)
+![image](https://github.com/frostace/Dynamic-Path-Planning/blob/master/Algorithms/dijkstra%20-%20demo.gif)  | ![image](https://github.com/frostace/Dynamic-Path-Planning/blob/master/Algorithms/astar - demo.gif) 
 RRT                        |  BIRRT
-![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/rrt%20-%20demo.gif)  |  
+![image](https://github.com/frostace/Dynamic-Path-Planning/blob/master/Algorithms/rrt%20-%20demo.gif)  |  
 Potential Fields           |  PRM
-![image](https://github.com/frostace/Path-Planning-Visualization/blob/master/potential%20field%20-%20demo.gif)
+![image](https://github.com/frostace/Dynamic-Path-Planning/blob/master/Algorithms/potential%20field%20-%20demo.gif)
 
 ## BUGs:
 1. ~~showing spots superposition problem<br>~~
