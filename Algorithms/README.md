@@ -5,7 +5,7 @@ I am gonna migrate this project to a dynamic path planning game in which the obs
 
 Dijkstra                   |  Astar
 :-------------------------:|:-------------------------:
-![image](https://github.com/frostace/Dynamic-Path-Planning/blob/master/Algorithms/dijkstra%20-%20demo.gif)  | ![image](https://github.com/frostace/Dynamic-Path-Planning/blob/master/Algorithms/astar - demo.gif) 
+![image](https://github.com/frostace/Dynamic-Path-Planning/blob/master/Algorithms/dijkstra%20-%20demo.gif)  | ![image](https://github.com/frostace/Dynamic-Path-Planning/blob/master/Algorithms/astar%20-%20demo.gif) 
 RRT                        |  BIRRT
 ![image](https://github.com/frostace/Dynamic-Path-Planning/blob/master/Algorithms/rrt%20-%20demo.gif)  |  
 Potential Fields           |  PRM
