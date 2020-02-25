@@ -19,8 +19,16 @@ class Board extends React.Component {
 	//     );
 	// }
 
+	testMouseUp() {
+		console.log("up");
+	}
+
+	testMouseDown() {
+		console.log("down");
+	}
+
 	render() {
-		console.log(this.props.allRows);
+		// console.log(this.props.allRows);
 		var board_rows = this.props.allRows.map((oneRowOfSquares, i) => {
 			return (
 				<div key={i} className="board-row">
@@ -29,12 +37,12 @@ class Board extends React.Component {
 			);
 		});
 
-		console.log(board_rows);
+		// console.log(board_rows);
 
 		return (
 			<div
-				onMouseDown={() => this.props.onMouseDown}
-				onMouseUp={() => this.props.onMouseDown}
+				onMouseDown={this.props.onMouseDown}
+				onMouseUp={this.props.onMouseUp}
 			>
 				{board_rows}
 			</div>

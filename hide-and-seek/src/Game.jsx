@@ -50,12 +50,12 @@ class Game extends React.Component {
 		});
 	}
 
-	handleMouseUpAndDown() {
-		// this.setState(prevState => {
-		// 	return { mouseIsDown: !prevState.mouseIsDown };
-		// });
+	handleMouseUpAndDown(e) {
+		this.setState(prevState => {
+			return { mouseIsDown: !prevState.mouseIsDown };
+		});
 		// console.log(this.state.mouseIsDown);
-		console.log("this is working!");
+		// console.log("this is working!");
 	}
 
 	render() {
@@ -75,15 +75,15 @@ class Game extends React.Component {
 		return (
 			<div
 				className="game"
-				onMouseDown={() => this.handleMouseUpAndDown}
-				onMouseUp={() => this.handleMouseUpAndDown}
+				// onMouseUp={() => this.handleMouseUpAndDown}
 			>
 				<div className="game-board">
 					<Board
 						className="board"
 						squares={this.state.boardSquareColors}
 						// onClick={i => this.handleClick(i)}
-
+						onMouseDown={this.handleMouseUpAndDown}
+						onMouseUp={this.handleMouseUpAndDown}
 						allRows={rows}
 					/>{" "}
 				</div>{" "}
