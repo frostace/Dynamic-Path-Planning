@@ -1,2 +1,2 @@
 # 
-https:// frostace.github.io/Dynamic-Path-Planning
+https://frostace.github.io/Dynamic-Path-Planning
