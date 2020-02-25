@@ -23,9 +23,8 @@ See [MIT LICENSE](https://github.com/frostace/BinaryClassification/blob/master/L
 
 # Contact
 
-If you have any ideas, feedback, requests or bug reports, you can reach me at
+If you have any ideas, feedback, requests or bug reports, feel free to reach me at
 [frostace0723@gmail.com](mailto:frostace0723@gmail.com)
-=======
-#
+
+
 https://frostace.github.io/Dynamic-Path-Planning
->>>>>>> 90c4374acb781dfd5ac97e54049b44a1d4db5eea
