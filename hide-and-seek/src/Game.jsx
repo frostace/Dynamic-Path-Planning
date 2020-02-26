@@ -7,20 +7,29 @@ import update from "react-addons-update";
 const originColor = "white";
 const flippedColor = "#0C3547";
 const boardRowNum = 49;
+const START_NODE_ROW = 10;
+const START_NODE_COL = 15;
+const FINISH_NODE_ROW = 10;
+const FINISH_NODE_COL = 35;
 
 class Game extends React.Component {
 	constructor(props) {
 		super(props);
-		var squareIndices = Array(boardRowNum).fill(Array(boardRowNum).fill(0));
-		for (let i = 0; i < boardRowNum; i++) {
-			for (let j = 0; j < boardRowNum; j++) {
+		var squareIndices = [...Array(boardRowNum)].map(x =>
+			Array(boardRowNum).fill(0)
+		);
+		for (var i = 0; i < boardRowNum; i++) {
+			for (var j = 0; j < boardRowNum; j++) {
 				squareIndices[i][j] = i * boardRowNum + j;
 			}
 		}
 		this.state = {
 			mouseIsDown: false,
 			squareList: squareIndices,
-			boardSquareIsWall: Array(boardRowNum * boardRowNum).fill(false),
+			boardSquareNodes: [],
+			boardSquareIsWall: [...Array(boardRowNum)].map(x =>
+				Array(boardRowNum).fill(false)
+			),
 			stepNumber: 0,
 			xIsNext: true
 		};
@@ -28,18 +37,31 @@ class Game extends React.Component {
 		this.handleMouseUpAndDown = this.handleMouseUpAndDown.bind(this);
 	}
 
-	handleMouseFlip(event, i) {
-		console.log(event);
-		if (!this.state.mouseIsDown) return;
-		const tmpSquares = this.state.boardSquareIsWall.slice();
+	componentDidMount() {
+		const nodes = getInitialGrid();
+		this.setState({ boardSquareNodes: nodes });
+	}
 
-		tmpSquares[i] = !tmpSquares[i];
-		// tmpSquares[i] === originColor || tmpSquares[i] === null
-		// 	? flippedColor
-		// 	: originColor;
+	handleMouseFlip(i, j) {
+		if (!this.state.mouseIsDown) return;
+		const tmpSquares = this.state.boardSquareNodes.slice();
+		tmpSquares[i][j].isWall = !tmpSquares[i][j].isWall;
 
 		this.setState({
-			boardSquareIsWall: tmpSquares,
+			boardSquareNodes: tmpSquares,
+			// boardSquareIsWall: update(this.state.boardSquareIsWall, {
+			// 	i: { $set: tmpSquares[i] }
+			// }),
+			xIsNext: !this.state.xIsNext
+		});
+	}
+
+	handleMouseClick(i, j) {
+		const tmpSquares = this.state.boardSquareNodes.slice();
+		tmpSquares[i][j].isWall = !tmpSquares[i][j].isWall;
+
+		this.setState({
+			boardSquareNodes: tmpSquares,
 			// boardSquareIsWall: update(this.state.boardSquareIsWall, {
 			// 	i: { $set: tmpSquares[i] }
 			// }),
@@ -51,29 +73,40 @@ class Game extends React.Component {
 		this.setState(prevState => {
 			return { mouseIsDown: !prevState.mouseIsDown };
 		});
-		// console.log(this.state.mouseIsDown);
-		// console.log("this is working!");
 	}
 
 	render() {
-		var rows = this.state.squareList.map((oneRowOfIndices, rowIdx) => {
-			return oneRowOfIndices.map((_, colIdx) => {
-				let overallIdx = rowIdx * boardRowNum + colIdx;
-				return (
-					<Square
-						key={overallIdx}
-						isWall={this.state.boardSquareIsWall[overallIdx]}
-						// color={this.state.boardSquareIsWall[overallIdx]}
-						onMouseOver={() =>
-							this.handleMouseFlip("over", overallIdx)
-						}
-						onClick={() =>
-							this.handleMouseFlip("click", overallIdx)
-						}
-					/>
-				);
-			});
-		});
+		var rows = this.state.boardSquareNodes.map(
+			(oneRowOfIndices, rowIdx) => {
+				return oneRowOfIndices.map((node, colIdx) => {
+					// console.log(squIdx, overallIdx);
+					const {
+						row,
+						col,
+						nodeIdx,
+						isFinish,
+						isStart,
+						isWall
+					} = node;
+					return (
+						<Square
+							id={`square-${rowIdx}-${colIdx}`}
+							key={nodeIdx}
+							isStart={isStart}
+							isFinish={isFinish}
+							isWall={isWall}
+							// color={this.state.boardSquareIsWall[overallIdx]}
+							onMouseOver={() =>
+								this.handleMouseFlip(rowIdx, colIdx)
+							}
+							onClick={() =>
+								this.handleMouseClick(rowIdx, colIdx)
+							}
+						/>
+					);
+				});
+			}
+		);
 
 		return (
 			<div
@@ -83,7 +116,7 @@ class Game extends React.Component {
 				<div className="game-board">
 					<Board
 						className="board"
-						squares={this.state.boardSquareIsWall}
+						// squares={this.state.boardSquareIsWall}
 						// onClick={i => this.handleClick(i)}
 						onMouseDown={this.handleMouseUpAndDown}
 						onMouseUp={this.handleMouseUpAndDown}
@@ -99,6 +132,32 @@ class Game extends React.Component {
 		);
 	}
 }
+
+const getInitialGrid = () => {
+	const grid = [];
+	for (let row = 0; row < boardRowNum; row++) {
+		const currentRow = [];
+		for (let col = 0; col < boardRowNum; col++) {
+			currentRow.push(createNode(col, row));
+		}
+		grid.push(currentRow);
+	}
+	return grid;
+};
+
+const createNode = (col, row) => {
+	return {
+		col,
+		row,
+		nodeIdx: row * boardRowNum + col,
+		isStart: row === START_NODE_ROW && col === START_NODE_COL,
+		isFinish: row === FINISH_NODE_ROW && col === FINISH_NODE_COL,
+		isVisited: false,
+		isWall: false,
+		distance: Infinity,
+		previousNode: null
+	};
+};
 
 function calculateWinner(squares) {
 	const lines = [

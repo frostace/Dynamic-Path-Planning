@@ -2,33 +2,7 @@ import React from "react";
 import Square from "./Square.jsx";
 
 class Board extends React.Component {
-	// constructor(props){
-	//     super(props);
-	//     this.state = {
-	//         squares: Array(9).fill(null),
-	//         xIsNext: true,
-	//     };
-	// }
-
-	// renderSquare(i) {
-	//     return (
-	//         <Square
-	//             color={this.props.squares[i]}
-	//             onClick={() => this.props.onClick(i)}
-	//         />
-	//     );
-	// }
-
-	testMouseUp() {
-		console.log("up");
-	}
-
-	testMouseDown() {
-		console.log("down");
-	}
-
 	render() {
-		// console.log(this.props.allRows);
 		var board_rows = this.props.allRows.map((oneRowOfSquares, i) => {
 			return (
 				<div key={i} className="board-row">
@@ -36,8 +10,6 @@ class Board extends React.Component {
 				</div>
 			);
 		});
-
-		// console.log(board_rows);
 
 		return (
 			<div
