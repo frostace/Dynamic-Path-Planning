@@ -1,8 +1,49 @@
 .square {
-	height: 2vw;
-	width: 2vw;
+	/* height: 2vw;
+    width: 2vw; */
+	height: 15px;
+	width: 15px;
+	margin: 0;
+	padding: 0;
 	/* border-width: 0.2px; */
-	border-color: #59cbe8;
+	/* border-color: #59cbe8; */
 	/* margin: 0.5px; */
+	/* outline: none; */
+	border: none;
+	outline: 1px solid rgb(175, 216, 248);
+	display: inline-block;
+}
+
+.square-wall {
 	outline: none;
+	animation-name: becomeWall;
+	animation-duration: 1s;
+	animation-timing-function: ease-out;
+	animation-delay: 0;
+	animation-direction: alternate;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+	animation-play-state: running;
+}
+
+@keyframes becomeWall {
+	0% {
+		transform: scale(0.3);
+		background-color: rgba(0, 0, 66, 0.75);
+		border-radius: 100%;
+	}
+
+	50% {
+		background-color: rgba(0, 0, 66, 0.75);
+	}
+
+	75% {
+		transform: scale(1.2);
+		background-color: rgba(0, 0, 66, 0.75);
+	}
+
+	100% {
+		transform: scale(1);
+		background-color: rgba(0, 0, 66, 0.75);
+	}
 }

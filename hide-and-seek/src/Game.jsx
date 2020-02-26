@@ -20,9 +20,7 @@ class Game extends React.Component {
 		this.state = {
 			mouseIsDown: false,
 			squareList: squareIndices,
-			boardSquareColors: Array(boardRowNum * boardRowNum).fill(
-				originColor
-			),
+			boardSquareIsWall: Array(boardRowNum * boardRowNum).fill(false),
 			stepNumber: 0,
 			xIsNext: true
 		};
@@ -30,18 +28,19 @@ class Game extends React.Component {
 		this.handleMouseUpAndDown = this.handleMouseUpAndDown.bind(this);
 	}
 
-	handleMouseFlip(i) {
+	handleMouseFlip(event, i) {
+		console.log(event);
 		if (!this.state.mouseIsDown) return;
-		const tmpSquares = this.state.boardSquareColors.slice();
+		const tmpSquares = this.state.boardSquareIsWall.slice();
 
-		tmpSquares[i] =
-			tmpSquares[i] === originColor || tmpSquares[i] === null
-				? flippedColor
-				: originColor;
+		tmpSquares[i] = !tmpSquares[i];
+		// tmpSquares[i] === originColor || tmpSquares[i] === null
+		// 	? flippedColor
+		// 	: originColor;
 
 		this.setState({
-			boardSquareColors: tmpSquares,
-			// boardSquareColors: update(this.state.boardSquareColors, {
+			boardSquareIsWall: tmpSquares,
+			// boardSquareIsWall: update(this.state.boardSquareIsWall, {
 			// 	i: { $set: tmpSquares[i] }
 			// }),
 			xIsNext: !this.state.xIsNext
@@ -63,8 +62,14 @@ class Game extends React.Component {
 				return (
 					<Square
 						key={overallIdx}
-						color={this.state.boardSquareColors[overallIdx]}
-						onMouseOver={() => this.handleMouseFlip(overallIdx)}
+						isWall={this.state.boardSquareIsWall[overallIdx]}
+						// color={this.state.boardSquareIsWall[overallIdx]}
+						onMouseOver={() =>
+							this.handleMouseFlip("over", overallIdx)
+						}
+						onClick={() =>
+							this.handleMouseFlip("click", overallIdx)
+						}
 					/>
 				);
 			});
@@ -78,7 +83,7 @@ class Game extends React.Component {
 				<div className="game-board">
 					<Board
 						className="board"
-						squares={this.state.boardSquareColors}
+						squares={this.state.boardSquareIsWall}
 						// onClick={i => this.handleClick(i)}
 						onMouseDown={this.handleMouseUpAndDown}
 						onMouseUp={this.handleMouseUpAndDown}
