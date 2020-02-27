@@ -1,23 +1,43 @@
 .square {
 	height: 2vw;
 	width: 2vw;
-	/* height: 15px;
-	width: 15px; */
+	margin: 0;
+	padding: 0;
+	border: none;
+	outline: 1px solid rgb(175, 216, 248);
+	display: inline-block;
+}
+
+.square-start {
+	outline: none;
+	border: none;
+	background-color: orange;
+	height: 2vw;
+	width: 2vw;
 	margin: 0;
 	padding: 0;
 	/* border-width: 0.2px; */
 	/* border-color: #59cbe8; */
 	/* margin: 0.5px; */
 	/* outline: none; */
+	display: inline-block;
+}
+
+.square-finish {
+	outline: none;
 	border: none;
-	outline: 1px solid rgb(175, 216, 248);
+	background-color: green;
+	height: 2vw;
+	width: 2vw;
+	margin: 0;
+	padding: 0;
 	display: inline-block;
 }
 
 .square-wall {
 	outline: none;
 	animation-name: becomeWall;
-	animation-duration: 1s;
+	animation-duration: 0.7s;
 	animation-timing-function: ease-out;
 	animation-delay: 0;
 	animation-direction: alternate;
@@ -45,5 +65,66 @@
 	100% {
 		transform: scale(1);
 		background-color: rgba(0, 0, 66, 0.75);
+	}
+}
+
+.square-visited {
+	animation-name: visitedAnimation;
+	animation-duration: 1.5s;
+	animation-timing-function: ease-out;
+	animation-delay: 0;
+	animation-direction: alternate;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+	animation-play-state: running;
+}
+
+@keyframes visitedAnimation {
+	0% {
+		transform: scale(0.3);
+		background-color: rgba(0, 0, 66, 0.75);
+		border-radius: 100%;
+	}
+
+	50% {
+		background-color: rgba(17, 104, 217, 0.75);
+	}
+
+	75% {
+		transform: scale(1.2);
+		background-color: rgba(0, 217, 159, 0.75);
+	}
+
+	100% {
+		transform: scale(1);
+		background-color: rgba(0, 190, 218, 0.75);
+	}
+}
+
+.square-shortest-path {
+	animation-name: shortestPath;
+	animation-duration: 1.5s;
+	animation-timing-function: ease-out;
+	animation-delay: 0;
+	animation-direction: alternate;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+	animation-play-state: running;
+}
+
+@keyframes shortestPath {
+	0% {
+		transform: scale(0.6);
+		background-color: rgb(255, 254, 106);
+	}
+
+	50% {
+		transform: scale(1.2);
+		background-color: rgb(255, 254, 106);
+	}
+
+	100% {
+		transform: scale(1);
+		background-color: rgb(255, 254, 106);
 	}
 }
