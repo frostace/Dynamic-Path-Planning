@@ -3,13 +3,12 @@ import { MinHeap } from "./minHeap";
 // Astar
 export function astar(board, startNode, finishNode) {
 	let H = new MinHeap();
-	console.log(H);
 	H.insert(startNode);
 	let visited = [];
 
-	console.log(H[0]);
 	while (visited.indexOf(finishNode) == -1 && H.length !== 0) {
 		var currNode = H.popMin();
+		if (currNode === undefined) return [];
 		var neighbors = currNode.neighbors.map(delta => {
 			// console.log(delta, board);
 			return board[delta[0]][delta[1]];

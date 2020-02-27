@@ -13,7 +13,6 @@ export class MinHeap {
 	}
 
 	insert(node) {
-		console.log("pushing: ", node);
 		this.heap.push(node);
 		var curr = this.heap.length - 1;
 		// console.log(curr, this.heap);
@@ -27,7 +26,6 @@ export class MinHeap {
 			];
 			curr = Math.floor(curr / 2);
 		}
-		console.log("pushed: ", node, this.heap);
 	}
 
 	remove(idx) {
