@@ -6,7 +6,7 @@ export function astar(board, startNode, finishNode) {
 	H.insert(startNode);
 	let visited = [];
 
-	while (visited.indexOf(finishNode) == -1 && H.length !== 0) {
+	while (visited.indexOf(finishNode) === -1 && H.length !== 0) {
 		var currNode = H.popMin();
 		if (currNode === undefined) return [];
 		var neighbors = currNode.neighbors.map(delta => {

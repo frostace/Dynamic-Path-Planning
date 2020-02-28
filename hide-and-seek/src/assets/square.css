@@ -49,22 +49,23 @@
 @keyframes becomeWall {
 	0% {
 		transform: scale(0.3);
-		background-color: rgba(0, 0, 66, 0.75);
+		/* background-color: rgba(0, 0, 66, 0.75); */
+		background-color: rgba(55, 58, 54);
 		border-radius: 100%;
 	}
 
 	50% {
-		background-color: rgba(0, 0, 66, 0.75);
+		background-color: rgba(55, 58, 54);
 	}
 
 	75% {
 		transform: scale(1.2);
-		background-color: rgba(0, 0, 66, 0.75);
+		background-color: rgba(55, 58, 54);
 	}
 
 	100% {
 		transform: scale(1);
-		background-color: rgba(0, 0, 66, 0.75);
+		background-color: rgba(55, 58, 54);
 	}
 }
 
@@ -82,22 +83,36 @@
 @keyframes visitedAnimation {
 	0% {
 		transform: scale(0.3);
-		background-color: rgba(0, 0, 66, 0.75);
+		/* background-color: rgba(0, 0, 66, 0.75); */
+		/* v3 */
+		background-color: rgba(204, 138, 0, 0.75);
 		border-radius: 100%;
 	}
 
 	50% {
-		background-color: rgba(17, 104, 217, 0.75);
+		/* background-color: rgba(17, 104, 217, 0.75); */
+		/* v2 */
+		/* background-color: rgba(75, 74, 89, 0.75); */
+		/* v3 */
+		background-color: rgba(255, 210, 2, 0.75);
 	}
 
 	75% {
 		transform: scale(1.2);
-		background-color: rgba(0, 217, 159, 0.75);
+		/* background-color: rgba(0, 217, 159, 0.75); */
+		/* v2 */
+		/* background-color: rgba(255, 210, 2, 0.75); */
+		/* v3 */
+		background-color: rgba(220, 198, 129, 0.75);
 	}
 
 	100% {
 		transform: scale(1);
-		background-color: rgba(0, 190, 218, 0.75);
+		/* background-color: rgba(0, 190, 218, 0.75); */
+		/* v2 */
+		/* background-color: rgba(238, 212, 132, 0.75); */
+		/* v3 */
+		background-color: rgba(214, 210, 196, 0.25);
 	}
 }
 
@@ -115,16 +130,18 @@
 @keyframes shortestPath {
 	0% {
 		transform: scale(0.6);
-		background-color: rgb(255, 254, 106);
+		/* background-color: rgb(255, 254, 106); */
+		/* background-color: rgba(58, 145, 63, 0.75); */
+		background-color: rgba(72, 172, 166, 0.75);
 	}
 
 	50% {
 		transform: scale(1.2);
-		background-color: rgb(255, 254, 106);
+		background-color: rgba(72, 172, 166, 0.75);
 	}
 
 	100% {
 		transform: scale(1);
-		background-color: rgb(255, 254, 106);
+		background-color: rgba(72, 172, 166, 0.75);
 	}
 }

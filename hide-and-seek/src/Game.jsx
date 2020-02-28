@@ -2,23 +2,18 @@ import React from "react";
 import Board from "./Board.jsx";
 import Square from "./Square.jsx";
 import "./assets/board.css";
-import update from "react-addons-update";
+// import update from "react-addons-update";
 import { dijkstra } from "./algorithms/dijkstra";
 import { astar } from "./algorithms/astar";
-
-const originColor = "white";
-const flippedColor = "#0C3547";
-const boardRowNum = 49;
-const START_NODE_ROW = 10;
-const START_NODE_COL = 15;
-const FINISH_NODE_ROW = 10;
-const FINISH_NODE_COL = 35;
-const neighborCandidates = [
-	[1, 0],
-	[-1, 0],
-	[0, 1],
-	[0, -1]
-];
+import { potentialField } from "./algorithms/potentialField";
+import {
+	boardRowNum,
+	START_NODE_ROW,
+	START_NODE_COL,
+	FINISH_NODE_ROW,
+	FINISH_NODE_COL,
+	neighborCandidates
+} from "./constants.js";
 
 class Game extends React.Component {
 	constructor(props) {
@@ -52,8 +47,18 @@ class Game extends React.Component {
 	}
 
 	handleMouseFlip(i, j) {
+		// set obstacle with mouse sliding is only enabled when mouse is clicked
 		if (!this.state.mouseIsDown) return;
 		const tmpSquares = this.state.boardSquareNodes.slice();
+
+		// cannot set start or finish node as obstacle
+		if (
+			(i === START_NODE_ROW && j === START_NODE_COL) ||
+			(i === FINISH_NODE_ROW && j === FINISH_NODE_COL)
+		)
+			return;
+
+		// flip node isWall state
 		tmpSquares[i][j].isWall = !tmpSquares[i][j].isWall;
 
 		this.setState({
@@ -67,8 +72,16 @@ class Game extends React.Component {
 
 	handleMouseClick(i, j) {
 		const tmpSquares = this.state.boardSquareNodes.slice();
-		tmpSquares[i][j].isWall = !tmpSquares[i][j].isWall;
 
+		// cannot set start or finish node as obstacle
+		if (
+			(i === START_NODE_ROW && j === START_NODE_COL) ||
+			(i === FINISH_NODE_ROW && j === FINISH_NODE_COL)
+		)
+			return;
+
+		// flip node isWall state
+		tmpSquares[i][j].isWall = !tmpSquares[i][j].isWall;
 		this.setState({
 			boardSquareNodes: tmpSquares,
 			// boardSquareIsWall: update(this.state.boardSquareIsWall, {
@@ -120,7 +133,7 @@ class Game extends React.Component {
 		const { boardSquareNodes } = this.state;
 		const startNode = boardSquareNodes[START_NODE_ROW][START_NODE_COL];
 		const finishNode = boardSquareNodes[FINISH_NODE_ROW][FINISH_NODE_COL];
-		const visitedNodesInOrder = astar(
+		const visitedNodesInOrder = potentialField(
 			boardSquareNodes,
 			startNode,
 			finishNode

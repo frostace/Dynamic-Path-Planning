@@ -4,11 +4,12 @@
 			"path": "."
 		},
 		{
-			"path": "/Users/frostace/Desktop/Pathfinding-Visualizer-Tutorial-master"
+			"path": "/Users/frostace/Documents/GitHub/Dynamic-Path-Planning-3d"
 		}
 	],
 	"settings": {
 		"editor.formatOnSave": true,
-		"prettier.useTabs": true
+		"prettier.useTabs": true,
+		"liveServer.settings.multiRootWorkspaceName": "test"
 	}
 }

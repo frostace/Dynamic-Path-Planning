@@ -3,7 +3,7 @@ export function dijkstra(board, startNode, finishNode) {
 	let visited = [];
 	tovisit.push(startNode);
 
-	while (visited.indexOf(finishNode) == -1 && tovisit.length !== 0) {
+	while (visited.indexOf(finishNode) === -1 && tovisit.length !== 0) {
 		var currNode = tovisit[0];
 		tovisit.splice(0, 1);
 
